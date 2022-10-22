@@ -1,0 +1,15 @@
+{
+  "kernel_name": "spylon-kernel",
+  "path_inputs": "input",
+  "notebooks": ["example.ipynb"],
+  "params": {
+    "THRESHOLD_DATE": "2018-01-01"
+  },
+  "repeat_by": {
+    "CUTOFF_DATES": [
+      "2018-01-31",
+      "2018-02-28",
+      "2018-03-28"
+    ]
+  }
+}
