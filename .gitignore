@@ -1,0 +1,5 @@
+# Project exclude paths
+/env-linux/
+/env/
+/.idea/
+.ipynb_checkpoints/
