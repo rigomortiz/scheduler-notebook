@@ -1,14 +1,16 @@
+import json
 import os
 import nbformat
 import logging
 from nbclient.exceptions import CellExecutionError
 from nbconvert.preprocessors import ExecutePreprocessor
 from src.Scheduler.Constants import ENV_FILE, NOTEBOOKS_KEY, AS_VERSION, KERNEL_NAME_KEY, TIMEOUT, \
-    FORMAT_DATE, NOTEBOOK_EXTENSION, PARAMS_KEY, CONFIG_FILE, REPEAT_BY_KEY, OUTPUT_PATH, INPUT_PATH, UTF_8, MODE
+    STARTUP_TIMEOUT, NOTEBOOK_EXTENSION, PARAMS_KEY, CONFIG_FILE, REPEAT_BY_KEY, OUTPUT_PATH, INPUT_PATH, UTF_8, MODE
 from src.Scheduler.Utils import Utils
 
 
 class Notebook:
+
     def __init__(self, num, name, path, params, kernel_name, current_time):
         self.num = num
         self.name = name
@@ -28,20 +30,34 @@ class Notebook:
             nb = nbformat.read(f, as_version=AS_VERSION)
             logging.info('Notebook: %s version: %s running with kernel %s', self.name, str(AS_VERSION), self.kernel_name)
             logging.info('Running cells...')
-            ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=self.kernel_name)
+            # Add cells to save env variables
+            source = '''
+import os
+import csv
+
+with open('output/data.csv', 'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    csvwriter.writerow(['VARIABLE', 'VALUE'])
+    csvwriter.writerows([[x.replace('@', ''), os.environ[x]] for x in list(os.environ.copy().keys()) if x[0] == '@' and x[-1] == '@'])
+            '''
+            nb.cells.append(nbformat.v4.new_code_cell(source))
+
+            # => Executing notebook
+            ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=self.kernel_name, startup_timeout=STARTUP_TIMEOUT)
             try:
-                out = ep.preprocess(nb)
+                out = ep.preprocess(nb, {})
                 # logging.info('NOTEBOOK\n\n %s', out)
+                logging.info('Notebook: %s executed successfully', self.name)
+                logging.info('Saving notebook: %s', OUTPUT_PATH + os.path.sep + self.output_name)
             except CellExecutionError:
                 out = None
                 logging.error('Error executing the notebook \'%s\'.\n\n See notebook \'%s\' for the traceback.',
                               self.name, self.output_name)
                 raise
             finally:
-                try:
-                    os.mkdir(OUTPUT_PATH)
-                except OSError as error:
-                    logging.warning(error)
+                # logging.info('Out: %s', out)
+                if not os.path.exists(OUTPUT_PATH):
+                    os.makedirs(OUTPUT_PATH)
                 with open(OUTPUT_PATH + os.sep + self.output_name, mode=MODE, encoding=UTF_8) as fnb:
                     nbformat.write(nb, fnb)
 
