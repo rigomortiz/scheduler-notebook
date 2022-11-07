@@ -1,0 +1,270 @@
+2022-11-07 08:57:17,852 [INFO] /mnt/c/Users/w10/Documents/Projects/scheduler-notebook
+2022-11-07 08:57:17,853 [INFO] Repeat time: 3
+2022-11-07 08:57:17,854 [INFO] Notebooks: 
+2022-11-07 08:57:17,854 [INFO] num=1, name=example.ipynb, path=notebooks/example.ipynb, params={'@THRESHOLD_DATE@': '2018-01-01', '@CUTOFF_DATES@': '2018-01-31'}, kernel_name=python3
+2022-11-07 08:57:17,855 [INFO] num=2, name=example.ipynb, path=notebooks/example.ipynb, params={'@THRESHOLD_DATE@': '2018-01-01', '@CUTOFF_DATES@': '2018-01-31,2018-02-28'}, kernel_name=python3
+2022-11-07 08:57:17,856 [INFO] num=3, name=example.ipynb, path=notebooks/example.ipynb, params={'@THRESHOLD_DATE@': '2018-01-01', '@CUTOFF_DATES@': '2018-01-31,2018-02-28,2018-03-28'}, kernel_name=python3
+2022-11-07 08:57:17,874 [INFO] Output path: output
+2022-11-07 08:57:17,876 [INFO] Running notebooks...
+2022-11-07 08:57:17,877 [INFO] Running notebook number: 1 of 3
+2022-11-07 08:57:17,877 [INFO] Running notebook: example.ipynb
+2022-11-07 08:57:17,878 [INFO] Params: {'@THRESHOLD_DATE@': '2018-01-01', '@CUTOFF_DATES@': '2018-01-31'}
+2022-11-07 08:57:17,878 [INFO] Open file: notebooks/example.ipynb
+2022-11-07 08:57:17,941 [INFO] Notebook: example.ipynb version: 4 running with kernel python3
+2022-11-07 08:57:17,942 [INFO] Running cells...
+2022-11-07 08:57:18,000 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:18,675 [DEBUG] Instantiating kernel 'Python 3 (ipykernel)' with kernel provisioner: local-provisioner
+2022-11-07 08:57:18,725 [DEBUG] Starting kernel: ['/usr/bin/python3', '-m', 'ipykernel_launcher', '-f', '/tmp/tmp_ked1zrg.json', '--HistoryManager.hist_file=:memory:']
+2022-11-07 08:57:18,755 [DEBUG] Connecting to: tcp://127.0.0.1:62842
+2022-11-07 08:57:18,772 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:18,778 [DEBUG] connecting iopub channel to tcp://127.0.0.1:62839
+2022-11-07 08:57:18,779 [DEBUG] Connecting to: tcp://127.0.0.1:62839
+2022-11-07 08:57:18,784 [DEBUG] connecting shell channel to tcp://127.0.0.1:62838
+2022-11-07 08:57:18,784 [DEBUG] Connecting to: tcp://127.0.0.1:62838
+2022-11-07 08:57:18,785 [DEBUG] connecting stdin channel to tcp://127.0.0.1:62840
+2022-11-07 08:57:18,786 [DEBUG] Connecting to: tcp://127.0.0.1:62840
+2022-11-07 08:57:18,787 [DEBUG] connecting heartbeat channel to tcp://127.0.0.1:62841
+2022-11-07 08:57:18,789 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:18,789 [DEBUG] connecting control channel to tcp://127.0.0.1:62842
+2022-11-07 08:57:18,792 [DEBUG] Connecting to: tcp://127.0.0.1:62842
+2022-11-07 08:57:20,134 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:20,144 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:20,145 [DEBUG] Executing cell:
+THRESHOLD_DATE = %env @THRESHOLD_DATE@
+print(THRESHOLD_DATE)
+2022-11-07 08:57:20,165 [DEBUG] msg_type: status
+2022-11-07 08:57:20,166 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:20,169 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:20,170 [DEBUG] content: {'code': 'THRESHOLD_DATE = %env @THRESHOLD_DATE@\nprint(THRESHOLD_DATE)', 'execution_count': 1}
+2022-11-07 08:57:20,172 [DEBUG] msg_type: stream
+2022-11-07 08:57:20,173 [DEBUG] content: {'name': 'stdout', 'text': '2018-01-01\n'}
+2022-11-07 08:57:20,177 [DEBUG] msg_type: status
+2022-11-07 08:57:20,177 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:20,180 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:20,181 [DEBUG] Executing cell:
+CUTOFF_DATES = %env @CUTOFF_DATES@
+CUTOFF_DATES = CUTOFF_DATES.split(',')
+print(CUTOFF_DATES)
+2022-11-07 08:57:20,192 [DEBUG] msg_type: status
+2022-11-07 08:57:20,192 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:20,196 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:20,196 [DEBUG] content: {'code': "CUTOFF_DATES = %env @CUTOFF_DATES@\nCUTOFF_DATES = CUTOFF_DATES.split(',')\nprint(CUTOFF_DATES)", 'execution_count': 2}
+2022-11-07 08:57:20,199 [DEBUG] msg_type: stream
+2022-11-07 08:57:20,199 [DEBUG] content: {'name': 'stdout', 'text': "['2018-01-31']\n"}
+2022-11-07 08:57:20,202 [DEBUG] msg_type: status
+2022-11-07 08:57:20,202 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:20,204 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:20,205 [DEBUG] Executing cell:
+CUTOFF_DATES_LEN = len(CUTOFF_DATES)
+%env @CUTOFF_DATES_LEN@ = $CUTOFF_DATES_LEN
+print(CUTOFF_DATES_LEN)
+2022-11-07 08:57:20,216 [DEBUG] msg_type: status
+2022-11-07 08:57:20,217 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:20,219 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:20,220 [DEBUG] content: {'code': 'CUTOFF_DATES_LEN = len(CUTOFF_DATES)\n%env @CUTOFF_DATES_LEN@ = $CUTOFF_DATES_LEN\nprint(CUTOFF_DATES_LEN)', 'execution_count': 3}
+2022-11-07 08:57:20,221 [DEBUG] msg_type: stream
+2022-11-07 08:57:20,222 [DEBUG] content: {'name': 'stdout', 'text': 'env: @CUTOFF_DATES_LEN@=1\n1\n'}
+2022-11-07 08:57:20,226 [DEBUG] msg_type: status
+2022-11-07 08:57:20,227 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:20,229 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:20,230 [DEBUG] Executing cell:
+
+import os
+import csv
+
+with open('output/data_2022-11-07_08-57-17.csv', 'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    csvwriter.writerow(['VARIABLE', 'VALUE'])
+    csvwriter.writerows([[x.replace('@', ''), os.environ[x]] for x in list(os.environ.copy().keys()) if x[0] == '@' and x[-1] == '@'])
+            
+2022-11-07 08:57:20,247 [DEBUG] msg_type: status
+2022-11-07 08:57:20,248 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:20,251 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:20,252 [DEBUG] content: {'code': "\nimport os\nimport csv\n\nwith open('output/data_2022-11-07_08-57-17.csv', 'w') as csvfile:\n    csvwriter = csv.writer(csvfile)\n    csvwriter.writerow(['VARIABLE', 'VALUE'])\n    csvwriter.writerows([[x.replace('@', ''), os.environ[x]] for x in list(os.environ.copy().keys()) if x[0] == '@' and x[-1] == '@'])\n            ", 'execution_count': 4}
+2022-11-07 08:57:20,258 [DEBUG] msg_type: status
+2022-11-07 08:57:20,259 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:20,261 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:20,483 [DEBUG] Destroying zmq context for <jupyter_client.asynchronous.client.AsyncKernelClient object at 0x7facca4c1fa0>
+2022-11-07 08:57:20,486 [INFO] Notebook: example.ipynb executed successfully
+2022-11-07 08:57:20,487 [INFO] Saving notebook: output/example_2022-11-07_08-57-17.ipynb
+2022-11-07 08:57:20,490 [ERROR] Notebook JSON is invalid: data.cells[{data__cells_x}] must be valid exactly by one definition (0 matches found)
+
+Failed validating <unset> in notebook['data']['cells']:
+
+On instance:
+<unset>
+2022-11-07 08:57:20,514 [INFO] Running notebook number: 2 of 3
+2022-11-07 08:57:20,515 [INFO] Running notebook: example.ipynb
+2022-11-07 08:57:20,516 [INFO] Params: {'@THRESHOLD_DATE@': '2018-01-01', '@CUTOFF_DATES@': '2018-01-31,2018-02-28'}
+2022-11-07 08:57:20,517 [INFO] Open file: notebooks/example.ipynb
+2022-11-07 08:57:20,520 [INFO] Notebook: example.ipynb version: 4 running with kernel python3
+2022-11-07 08:57:20,521 [INFO] Running cells...
+2022-11-07 08:57:20,527 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:20,533 [DEBUG] Instantiating kernel 'Python 3 (ipykernel)' with kernel provisioner: local-provisioner
+2022-11-07 08:57:20,546 [DEBUG] Starting kernel: ['/usr/bin/python3', '-m', 'ipykernel_launcher', '-f', '/tmp/tmpe6icco52.json', '--HistoryManager.hist_file=:memory:']
+2022-11-07 08:57:20,588 [DEBUG] Connecting to: tcp://127.0.0.1:62906
+2022-11-07 08:57:20,605 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:20,616 [DEBUG] connecting iopub channel to tcp://127.0.0.1:62903
+2022-11-07 08:57:20,617 [DEBUG] Connecting to: tcp://127.0.0.1:62903
+2022-11-07 08:57:20,620 [DEBUG] connecting shell channel to tcp://127.0.0.1:62902
+2022-11-07 08:57:20,621 [DEBUG] Connecting to: tcp://127.0.0.1:62902
+2022-11-07 08:57:20,623 [DEBUG] connecting stdin channel to tcp://127.0.0.1:62904
+2022-11-07 08:57:20,623 [DEBUG] Connecting to: tcp://127.0.0.1:62904
+2022-11-07 08:57:20,625 [DEBUG] connecting heartbeat channel to tcp://127.0.0.1:62905
+2022-11-07 08:57:20,628 [DEBUG] connecting control channel to tcp://127.0.0.1:62906
+2022-11-07 08:57:20,629 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:20,629 [DEBUG] Connecting to: tcp://127.0.0.1:62906
+2022-11-07 08:57:21,833 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:21,843 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:21,845 [DEBUG] Executing cell:
+THRESHOLD_DATE = %env @THRESHOLD_DATE@
+print(THRESHOLD_DATE)
+2022-11-07 08:57:21,868 [DEBUG] msg_type: status
+2022-11-07 08:57:21,869 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:21,872 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:21,873 [DEBUG] content: {'code': 'THRESHOLD_DATE = %env @THRESHOLD_DATE@\nprint(THRESHOLD_DATE)', 'execution_count': 1}
+2022-11-07 08:57:21,876 [DEBUG] msg_type: stream
+2022-11-07 08:57:21,877 [DEBUG] content: {'name': 'stdout', 'text': '2018-01-01\n'}
+2022-11-07 08:57:21,881 [DEBUG] msg_type: status
+2022-11-07 08:57:21,882 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:21,886 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:21,887 [DEBUG] Executing cell:
+CUTOFF_DATES = %env @CUTOFF_DATES@
+CUTOFF_DATES = CUTOFF_DATES.split(',')
+print(CUTOFF_DATES)
+2022-11-07 08:57:21,899 [DEBUG] msg_type: status
+2022-11-07 08:57:21,900 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:21,903 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:21,904 [DEBUG] content: {'code': "CUTOFF_DATES = %env @CUTOFF_DATES@\nCUTOFF_DATES = CUTOFF_DATES.split(',')\nprint(CUTOFF_DATES)", 'execution_count': 2}
+2022-11-07 08:57:21,915 [DEBUG] msg_type: stream
+2022-11-07 08:57:21,916 [DEBUG] content: {'name': 'stdout', 'text': "['2018-01-31', '2018-02-28']\n"}
+2022-11-07 08:57:21,922 [DEBUG] msg_type: status
+2022-11-07 08:57:21,923 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:21,925 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:21,927 [DEBUG] Executing cell:
+CUTOFF_DATES_LEN = len(CUTOFF_DATES)
+%env @CUTOFF_DATES_LEN@ = $CUTOFF_DATES_LEN
+print(CUTOFF_DATES_LEN)
+2022-11-07 08:57:21,941 [DEBUG] msg_type: status
+2022-11-07 08:57:21,942 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:21,946 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:21,948 [DEBUG] content: {'code': 'CUTOFF_DATES_LEN = len(CUTOFF_DATES)\n%env @CUTOFF_DATES_LEN@ = $CUTOFF_DATES_LEN\nprint(CUTOFF_DATES_LEN)', 'execution_count': 3}
+2022-11-07 08:57:21,951 [DEBUG] msg_type: stream
+2022-11-07 08:57:21,952 [DEBUG] content: {'name': 'stdout', 'text': 'env: @CUTOFF_DATES_LEN@=2\n2\n'}
+2022-11-07 08:57:21,960 [DEBUG] msg_type: status
+2022-11-07 08:57:21,961 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:21,964 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:21,965 [DEBUG] Executing cell:
+
+import os
+import csv
+
+with open('output/data_2022-11-07_08-57-17.csv', 'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    csvwriter.writerow(['VARIABLE', 'VALUE'])
+    csvwriter.writerows([[x.replace('@', ''), os.environ[x]] for x in list(os.environ.copy().keys()) if x[0] == '@' and x[-1] == '@'])
+            
+2022-11-07 08:57:21,983 [DEBUG] msg_type: status
+2022-11-07 08:57:21,984 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:21,986 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:21,987 [DEBUG] content: {'code': "\nimport os\nimport csv\n\nwith open('output/data_2022-11-07_08-57-17.csv', 'w') as csvfile:\n    csvwriter = csv.writer(csvfile)\n    csvwriter.writerow(['VARIABLE', 'VALUE'])\n    csvwriter.writerows([[x.replace('@', ''), os.environ[x]] for x in list(os.environ.copy().keys()) if x[0] == '@' and x[-1] == '@'])\n            ", 'execution_count': 4}
+2022-11-07 08:57:21,996 [DEBUG] msg_type: status
+2022-11-07 08:57:22,000 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:22,003 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:22,327 [DEBUG] Destroying zmq context for <jupyter_client.asynchronous.client.AsyncKernelClient object at 0x7facca481d90>
+2022-11-07 08:57:22,330 [INFO] Notebook: example.ipynb executed successfully
+2022-11-07 08:57:22,330 [INFO] Saving notebook: output/example_2022-11-07_08-57-17.ipynb
+2022-11-07 08:57:22,334 [ERROR] Notebook JSON is invalid: data.cells[{data__cells_x}] must be valid exactly by one definition (0 matches found)
+
+Failed validating <unset> in notebook['data']['cells']:
+
+On instance:
+<unset>
+2022-11-07 08:57:22,368 [INFO] Running notebook number: 3 of 3
+2022-11-07 08:57:22,370 [INFO] Running notebook: example.ipynb
+2022-11-07 08:57:22,371 [INFO] Params: {'@THRESHOLD_DATE@': '2018-01-01', '@CUTOFF_DATES@': '2018-01-31,2018-02-28,2018-03-28'}
+2022-11-07 08:57:22,371 [INFO] Open file: notebooks/example.ipynb
+2022-11-07 08:57:22,374 [INFO] Notebook: example.ipynb version: 4 running with kernel python3
+2022-11-07 08:57:22,375 [INFO] Running cells...
+2022-11-07 08:57:22,385 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:22,392 [DEBUG] Instantiating kernel 'Python 3 (ipykernel)' with kernel provisioner: local-provisioner
+2022-11-07 08:57:22,411 [DEBUG] Starting kernel: ['/usr/bin/python3', '-m', 'ipykernel_launcher', '-f', '/tmp/tmpisxjdnm7.json', '--HistoryManager.hist_file=:memory:']
+2022-11-07 08:57:22,466 [DEBUG] Connecting to: tcp://127.0.0.1:62962
+2022-11-07 08:57:22,484 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:22,497 [DEBUG] connecting iopub channel to tcp://127.0.0.1:62959
+2022-11-07 08:57:22,498 [DEBUG] Connecting to: tcp://127.0.0.1:62959
+2022-11-07 08:57:22,501 [DEBUG] connecting shell channel to tcp://127.0.0.1:62958
+2022-11-07 08:57:22,502 [DEBUG] Connecting to: tcp://127.0.0.1:62958
+2022-11-07 08:57:22,504 [DEBUG] connecting stdin channel to tcp://127.0.0.1:62960
+2022-11-07 08:57:22,505 [DEBUG] Connecting to: tcp://127.0.0.1:62960
+2022-11-07 08:57:22,506 [DEBUG] connecting heartbeat channel to tcp://127.0.0.1:62961
+2022-11-07 08:57:22,509 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:22,510 [DEBUG] connecting control channel to tcp://127.0.0.1:62962
+2022-11-07 08:57:22,511 [DEBUG] Connecting to: tcp://127.0.0.1:62962
+2022-11-07 08:57:23,870 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:23,880 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:23,882 [DEBUG] Executing cell:
+THRESHOLD_DATE = %env @THRESHOLD_DATE@
+print(THRESHOLD_DATE)
+2022-11-07 08:57:23,902 [DEBUG] msg_type: status
+2022-11-07 08:57:23,903 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:23,906 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:23,907 [DEBUG] content: {'code': 'THRESHOLD_DATE = %env @THRESHOLD_DATE@\nprint(THRESHOLD_DATE)', 'execution_count': 1}
+2022-11-07 08:57:23,910 [DEBUG] msg_type: stream
+2022-11-07 08:57:23,911 [DEBUG] content: {'name': 'stdout', 'text': '2018-01-01\n'}
+2022-11-07 08:57:23,916 [DEBUG] msg_type: status
+2022-11-07 08:57:23,917 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:23,920 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:23,922 [DEBUG] Executing cell:
+CUTOFF_DATES = %env @CUTOFF_DATES@
+CUTOFF_DATES = CUTOFF_DATES.split(',')
+print(CUTOFF_DATES)
+2022-11-07 08:57:24,029 [DEBUG] msg_type: status
+2022-11-07 08:57:24,030 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:24,035 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:24,036 [DEBUG] content: {'code': "CUTOFF_DATES = %env @CUTOFF_DATES@\nCUTOFF_DATES = CUTOFF_DATES.split(',')\nprint(CUTOFF_DATES)", 'execution_count': 2}
+2022-11-07 08:57:24,040 [DEBUG] msg_type: stream
+2022-11-07 08:57:24,041 [DEBUG] content: {'name': 'stdout', 'text': "['2018-01-31', '2018-02-28', '2018-03-28']\n"}
+2022-11-07 08:57:24,045 [DEBUG] msg_type: status
+2022-11-07 08:57:24,046 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:24,047 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:24,049 [DEBUG] Executing cell:
+CUTOFF_DATES_LEN = len(CUTOFF_DATES)
+%env @CUTOFF_DATES_LEN@ = $CUTOFF_DATES_LEN
+print(CUTOFF_DATES_LEN)
+2022-11-07 08:57:24,062 [DEBUG] msg_type: status
+2022-11-07 08:57:24,063 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:24,066 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:24,067 [DEBUG] content: {'code': 'CUTOFF_DATES_LEN = len(CUTOFF_DATES)\n%env @CUTOFF_DATES_LEN@ = $CUTOFF_DATES_LEN\nprint(CUTOFF_DATES_LEN)', 'execution_count': 3}
+2022-11-07 08:57:24,071 [DEBUG] msg_type: stream
+2022-11-07 08:57:24,072 [DEBUG] content: {'name': 'stdout', 'text': 'env: @CUTOFF_DATES_LEN@=3\n3\n'}
+2022-11-07 08:57:24,078 [DEBUG] msg_type: status
+2022-11-07 08:57:24,079 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:24,081 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:24,082 [DEBUG] Executing cell:
+
+import os
+import csv
+
+with open('output/data_2022-11-07_08-57-17.csv', 'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    csvwriter.writerow(['VARIABLE', 'VALUE'])
+    csvwriter.writerows([[x.replace('@', ''), os.environ[x]] for x in list(os.environ.copy().keys()) if x[0] == '@' and x[-1] == '@'])
+            
+2022-11-07 08:57:24,102 [DEBUG] msg_type: status
+2022-11-07 08:57:24,104 [DEBUG] content: {'execution_state': 'busy'}
+2022-11-07 08:57:24,107 [DEBUG] msg_type: execute_input
+2022-11-07 08:57:24,108 [DEBUG] content: {'code': "\nimport os\nimport csv\n\nwith open('output/data_2022-11-07_08-57-17.csv', 'w') as csvfile:\n    csvwriter = csv.writer(csvfile)\n    csvwriter.writerow(['VARIABLE', 'VALUE'])\n    csvwriter.writerows([[x.replace('@', ''), os.environ[x]] for x in list(os.environ.copy().keys()) if x[0] == '@' and x[-1] == '@'])\n            ", 'execution_count': 4}
+2022-11-07 08:57:24,118 [DEBUG] msg_type: status
+2022-11-07 08:57:24,119 [DEBUG] content: {'execution_state': 'idle'}
+2022-11-07 08:57:24,121 [DEBUG] Using selector: EpollSelector
+2022-11-07 08:57:24,453 [DEBUG] Destroying zmq context for <jupyter_client.asynchronous.client.AsyncKernelClient object at 0x7facca4611f0>
+2022-11-07 08:57:24,455 [INFO] Notebook: example.ipynb executed successfully
+2022-11-07 08:57:24,455 [INFO] Saving notebook: output/example_2022-11-07_08-57-17.ipynb
+2022-11-07 08:57:24,458 [ERROR] Notebook JSON is invalid: data.cells[{data__cells_x}] must be valid exactly by one definition (0 matches found)
+
+Failed validating <unset> in notebook['data']['cells']:
+
+On instance:
+<unset>
+2022-11-07 08:57:24,482 [INFO] Done
