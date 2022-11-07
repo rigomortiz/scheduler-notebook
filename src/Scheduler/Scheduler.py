@@ -17,7 +17,9 @@ class Notebook:
         self.path = path
         self.params = params
         self.kernel_name = kernel_name
-        self.output_name = self.name.replace(NOTEBOOK_EXTENSION, '_' + current_time + '_out' + NOTEBOOK_EXTENSION)
+        self.output_name = OUTPUT_PATH + os.path.sep + self.name.replace(NOTEBOOK_EXTENSION, '_' + current_time +
+                                                                         NOTEBOOK_EXTENSION)
+        self.output_cvs_name = OUTPUT_PATH + os.sep + 'data_' + current_time + '.csv'
         # self.env = Utils.get_env()
 
     def __str__(self):
@@ -35,11 +37,11 @@ class Notebook:
 import os
 import csv
 
-with open('output/data.csv', 'w') as csvfile:
+with open('CSV_NAME', 'w') as csvfile:
     csvwriter = csv.writer(csvfile)
     csvwriter.writerow(['VARIABLE', 'VALUE'])
     csvwriter.writerows([[x.replace('@', ''), os.environ[x]] for x in list(os.environ.copy().keys()) if x[0] == '@' and x[-1] == '@'])
-            '''
+            '''.replace('CSV_NAME', self.output_cvs_name)
             nb.cells.append(nbformat.v4.new_code_cell(source))
 
             # => Executing notebook
@@ -48,17 +50,14 @@ with open('output/data.csv', 'w') as csvfile:
                 out = ep.preprocess(nb, {})
                 # logging.info('NOTEBOOK\n\n %s', out)
                 logging.info('Notebook: %s executed successfully', self.name)
-                logging.info('Saving notebook: %s', OUTPUT_PATH + os.path.sep + self.output_name)
+                logging.info('Saving notebook: %s', self.output_name)
             except CellExecutionError:
                 out = None
                 logging.error('Error executing the notebook \'%s\'.\n\n See notebook \'%s\' for the traceback.',
                               self.name, self.output_name)
                 raise
             finally:
-                # logging.info('Out: %s', out)
-                if not os.path.exists(OUTPUT_PATH):
-                    os.makedirs(OUTPUT_PATH)
-                with open(OUTPUT_PATH + os.sep + self.output_name, mode=MODE, encoding=UTF_8) as fnb:
+                with open(self.output_name, mode=MODE, encoding=UTF_8) as fnb:
                     nbformat.write(nb, fnb)
 
 
@@ -104,6 +103,10 @@ class Scheduler:
         logging.info("Notebooks: ")
         for notebook in self.notebooks:
             logging.info(notebook)
+
+        logging.info('Output path: %s', OUTPUT_PATH)
+        if not os.path.exists(OUTPUT_PATH):
+            os.makedirs(OUTPUT_PATH)
 
     def get_notebooks(self):
         return self.notebooks
