@@ -1,6 +1,5 @@
 {
   "kernel_name": "python3",
-  "path_inputs": "input",
   "notebooks": ["notebooks/example.ipynb"],
   "params": {
     "@THRESHOLD_DATE@": "2018-01-01"

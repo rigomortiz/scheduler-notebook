@@ -19,9 +19,16 @@ class Utils:
             for line in file:
                 key, value = line.split('=')
                 args[key] = value.replace('\n', '')
+                os.environ[key] = value.replace('\n', '')
             return args
         except FileNotFoundError:
             return None
+
+    @staticmethod
+    def write_params_to_notebook(params):
+        with open(INPUT_PATH + os.sep + ENV_FILE, MODE) as file:
+            for param in params:
+                file.write(param + '\n')
 
     @staticmethod
     def get_env():
@@ -34,4 +41,3 @@ class Utils:
     @staticmethod
     def clean_env():
         os.environ.clear()
-

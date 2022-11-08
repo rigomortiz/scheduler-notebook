@@ -1,39 +1,47 @@
-import json
 import os
+from datetime import datetime
 import nbformat
 import logging
 from nbclient.exceptions import CellExecutionError
 from nbconvert.preprocessors import ExecutePreprocessor
-from src.Scheduler.Constants import ENV_FILE, NOTEBOOKS_KEY, AS_VERSION, KERNEL_NAME_KEY, TIMEOUT, \
-    STARTUP_TIMEOUT, NOTEBOOK_EXTENSION, PARAMS_KEY, CONFIG_FILE, REPEAT_BY_KEY, OUTPUT_PATH, INPUT_PATH, UTF_8, MODE
+
 from src.Scheduler.Utils import Utils
+from src.Scheduler.Constants import ENV_FILE, NOTEBOOKS_KEY, AS_VERSION, KERNEL_NAME_KEY, TIMEOUT, \
+    STARTUP_TIMEOUT, NOTEBOOK_EXTENSION, PARAMS_KEY, CONFIG_FILE, REPEAT_BY_KEY, OUTPUT_PATH, UTF_8, MODE, \
+    FORMAT_DATE
 
 
 class Notebook:
 
-    def __init__(self, num, name, path, params, kernel_name, current_time):
+    def __init__(self, num, name, path, params, kernel_name):
         self.num = num
         self.name = name
         self.path = path
         self.params = params
         self.kernel_name = kernel_name
-        self.output_name = OUTPUT_PATH + os.path.sep + self.name.replace(NOTEBOOK_EXTENSION, '_' + current_time +
-                                                                         NOTEBOOK_EXTENSION)
-        self.output_cvs_name = OUTPUT_PATH + os.sep + 'data_' + current_time + '.csv'
         # self.env = Utils.get_env()
 
     def __str__(self):
         return 'num=' + str(self.num) + ', name=' + self.name + ', path=' + self.path + ', params=' + str(self.params) \
                + ', kernel_name=' + self.kernel_name
 
-    def run(self):
-        logging.info('Open file: %s', self.path)
-        with open(self.path) as f:
-            nb = nbformat.read(f, as_version=AS_VERSION)
-            logging.info('Notebook: %s version: %s running with kernel %s', self.name, str(AS_VERSION), self.kernel_name)
-            logging.info('Running cells...')
-            # Add cells to save env variables
-            source = '''
+    @staticmethod
+    def get_cell_read_env():
+        source = '''
+import os
+
+file = open('.env')
+args = dict()
+for line in file:
+    key, value = line.split('=')
+    args[key] = value.replace('\\n', '')
+    os.environ[key] = value.replace('\\n', '')
+                    '''
+        return nbformat.v4.new_code_cell(source)
+
+    @staticmethod
+    def get_cell_write_env(name):
+        source = '''
 import os
 import csv
 
@@ -41,29 +49,45 @@ with open('CSV_NAME', 'w') as csvfile:
     csvwriter = csv.writer(csvfile)
     csvwriter.writerow(['VARIABLE', 'VALUE'])
     csvwriter.writerows([[x.replace('@', ''), os.environ[x]] for x in list(os.environ.copy().keys()) if x[0] == '@' and x[-1] == '@'])
-            '''.replace('CSV_NAME', self.output_cvs_name)
-            nb.cells.append(nbformat.v4.new_code_cell(source))
+                    '''.replace('CSV_NAME', name)
+        return nbformat.v4.new_code_cell(source)
+
+    def run(self):
+        logging.info('Open file: %s', self.path)
+        with open(self.path) as f:
+            nb = nbformat.read(f, as_version=AS_VERSION)
+            current_time = datetime.now().strftime(FORMAT_DATE)
+            output_name = OUTPUT_PATH + os.path.sep + self.name.replace(NOTEBOOK_EXTENSION, '_' + current_time +
+                                                                        NOTEBOOK_EXTENSION)
+            logging.info('Notebook: %s version: %s running with kernel %s', output_name, str(AS_VERSION),
+                         self.kernel_name)
+            logging.info('Running cells...')
+
+            # Add cell to read env variables file
+            # nb.cells.insert(0, self.get_cell_read_env())
+            # Add cell to save env variables
+            nb.cells.append(self.get_cell_write_env(OUTPUT_PATH + os.path.sep + 'data_' + current_time + '.csv'))
 
             # => Executing notebook
             ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=self.kernel_name, startup_timeout=STARTUP_TIMEOUT)
             try:
                 out = ep.preprocess(nb, {})
+
                 # logging.info('NOTEBOOK\n\n %s', out)
-                logging.info('Notebook: %s executed successfully', self.name)
-                logging.info('Saving notebook: %s', self.output_name)
+                logging.info('Notebook: %s executed successfully', output_name)
+                logging.info('Saving notebook: %s', output_name)
             except CellExecutionError:
                 out = None
                 logging.error('Error executing the notebook \'%s\'.\n\n See notebook \'%s\' for the traceback.',
-                              self.name, self.output_name)
+                              self.name, output_name)
                 raise
             finally:
-                with open(self.output_name, mode=MODE, encoding=UTF_8) as fnb:
+                with open(output_name, mode=MODE, encoding=UTF_8) as fnb:
                     nbformat.write(nb, fnb)
 
 
 class Scheduler:
-    def __init__(self, current_time, config_file=CONFIG_FILE, env_file=ENV_FILE):
-        self.current_time = current_time
+    def __init__(self, config_file=CONFIG_FILE, env_file=ENV_FILE):
         self.notebooks = []
         self.time = 1
         self.config = Utils.read_config_file(config_file)
@@ -90,14 +114,15 @@ class Scheduler:
                 args_repeat[key_repeat] = ",".join(str(x) for x in self.config[REPEAT_BY_KEY][key_repeat][:i + 1])
                 for n in range(0, len(self.config[NOTEBOOKS_KEY])):
                     notebook = self.config[NOTEBOOKS_KEY][n]
+                    current_time = datetime.now().strftime(FORMAT_DATE)
                     self.notebooks.append(Notebook(num, os.path.basename(notebook), notebook, {**args_repeat},
-                                          self.config[KERNEL_NAME_KEY], self.current_time))
+                                          self.config[KERNEL_NAME_KEY]))
                     num += 1
         else:
             self.time = 1
             for notebook in self.config[NOTEBOOKS_KEY]:
                 self.notebooks.append(Notebook(1, os.path.basename(notebook), notebook, self.config[PARAMS_KEY],
-                                               self.config[KERNEL_NAME_KEY], self.current_time))
+                                               self.config[KERNEL_NAME_KEY]))
 
         logging.info('Repeat time: %s', str(self.time))
         logging.info("Notebooks: ")
@@ -110,12 +135,6 @@ class Scheduler:
 
     def get_notebooks(self):
         return self.notebooks
-
-    def write_params_to_notebook(self, params):
-        with open(INPUT_PATH + os.sep + ENV_FILE, MODE) as file:
-            logging.info('Writing params to file')
-            for param in params:
-                file.write(param + '\n')
 
     def run(self):
         logging.info('Running notebooks...')
