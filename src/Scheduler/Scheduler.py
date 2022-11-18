@@ -110,8 +110,12 @@ class Scheduler:
             self.time = len(self.config[REPEAT_BY_KEY][key_repeat])
             num = 1
             for i in range(0, self.time):
-                args_repeat = self.config[PARAMS_KEY]
-                args_repeat[key_repeat] = ",".join(str(x) for x in self.config[REPEAT_BY_KEY][key_repeat][:i + 1])
+                args_repeat = self.params.copy()
+                args_repeat[key_repeat] = ','.join(str(x) for x in self.config[REPEAT_BY_KEY][key_repeat][:i + 1])
+                args_repeat[key_repeat] = self.params[key_repeat] + ',' + args_repeat[key_repeat]
+                print("args_repeat: ")
+                print(args_repeat)
+                # args_repeat[key_repeat] = self.params[key_repeat] + ',' + args_repeat[key_repeat]
                 for n in range(0, len(self.config[NOTEBOOKS_KEY])):
                     notebook = self.config[NOTEBOOKS_KEY][n]
                     current_time = datetime.now().strftime(FORMAT_DATE)
@@ -147,4 +151,4 @@ class Scheduler:
             logging.info('Running notebook number: %s of %s', str(notebook.num), str(self.time))
             logging.info('Running notebook: %s', notebook.name)
             logging.info('Params: %s', str(notebook.params))
-            notebook.run()
+            # notebook.run()
