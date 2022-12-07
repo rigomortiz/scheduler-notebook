@@ -24,9 +24,11 @@ class Scheduler:
         if NOTEBOOKS not in self.config:
             raise Exception('Exception: Not found notebooks key')
 
-        self.__initializer_notebooks()
-
         logging.info('Output path: %s', OUTPUT_PATH)
+        if not os.path.exists(OUTPUT_PATH):
+            os.makedirs(OUTPUT_PATH)
+
+        self.__initializer_notebooks()
 
         logging.info('Repeat time: %s', str(self.time))
         logging.info("Notebooks: ")
@@ -39,6 +41,10 @@ class Scheduler:
             raise Exception('\'Notebooks\' key not is an array')
 
         for notebook in self.config[NOTEBOOKS]:
+            NOTEBOOK_PATH = OUTPUT_PATH + os.path.sep + notebook[NAME]
+            if not os.path.exists(NOTEBOOK_PATH):
+                os.makedirs(NOTEBOOK_PATH)
+
             if KERNEL_NAME not in notebook:
                 raise Exception('\'Kernel name\' key not found')
             if PATHS not in notebook:
@@ -56,17 +62,31 @@ class Scheduler:
                 self.time = len(accumulated_params[0][VALUE])
                 if self.time > 0:
                     for i in range(self.time):
+                        accumulated = ','.join(str(x) for x in accumulated_params[0][VALUE][:i + 1])
+                        NB_ACCUMULATED_PATH = NOTEBOOK_PATH + os.path.sep + accumulated.split(',')[-1]
+                        if not os.path.exists(NB_ACCUMULATED_PATH):
+                            os.makedirs(NB_ACCUMULATED_PATH)
+
                         param = {
                             NAME: accumulated_params[0][NAME],
-                            VALUE: ','.join(str(x) for x in accumulated_params[0][VALUE][:i + 1]),
+                            VALUE: accumulated,
                             TYPE: accumulated_params[0][TYPE]
                         }
-                        for p in range(len(notebook[PATHS])):
-                            params = consts_params.copy()
-                            params.append(param)
-                            print(params)
-                            nb = Notebook(path=notebook[PATHS][p], params=params, kernel_name=notebook[KERNEL_NAME])
-                            self.notebooks.append(nb)
+
+                        params = consts_params.copy()
+                        params.append(param)
+
+                        if len(notebook[PATHS]) > 1:
+                            path = NB_ACCUMULATED_PATH + os.path.sep + notebook[NAME] + NOTEBOOK_EXTENSION
+                            Utils.merge_notebooks(notebook[PATHS], path)
+                        elif len(notebook[PATHS]) == 1:
+                            path = notebook[PATHS][0]
+                        else:
+                            raise Exception('Not found path notebook')
+
+                        nb = Notebook(path=path, params=params, kernel_name=notebook[KERNEL_NAME],
+                                      output_path=NB_ACCUMULATED_PATH)
+                        self.notebooks.append(nb)
                 else:
                     pass
 

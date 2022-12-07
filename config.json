@@ -1,6 +1,7 @@
 {
   "notebooks": [
     {
+      "name": "notebook1",
       "kernel_name": "python3",
       "params": [
         {
@@ -18,7 +19,8 @@
         }
       ],
       "paths": [
-        "notebooks/example.ipynb"
+        "notebooks/example.ipynb",
+        "notebooks/example-Copy1.ipynb"
       ]
     }
   ]

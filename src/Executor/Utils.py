@@ -1,4 +1,5 @@
 import json
+import numpy as np
 import nbformat
 from src.Executor.Constants import *
 
@@ -83,8 +84,7 @@ with open(PATH + os.path.sep + '.env', 'w') as file:
         return nbformat.v4.new_code_cell(source)
 
     @staticmethod
-    def start_cell(value_accum, params) -> nbformat.notebooknode.NotebookNode:
-        folder = OUTPUT_PATH + os.path.sep + value_accum
+    def start_cell(params) -> nbformat.notebooknode.NotebookNode:
         ps = ''.join(['%env ' + param[NAME] + ' = ' + param[VALUE] + '\n' for param in params])
         source = '''
 from IPython.core.magic import register_line_cell_magic
@@ -104,12 +104,10 @@ if os.path.exists(PATH + os.path.sep + 'test.py'):
 def write_test(line, cell):
     print('Running Tests ...')
     if cell is None:
-        print('Cell')
         with open(PATH + os.path.sep + 'test.py', 'a') as f:
             f.write(cell.format(**globals()))
             f.close()
     else:
-        print('Line')
         with open(PATH + os.path.sep + 'test.py', 'a') as f:
             f.write(cell.format(**globals()))
             f.close()
@@ -119,7 +117,24 @@ def write_test(line, cell):
         f.close()
     #pytest.main(['-v', PATH + os.path.sep + 'test.py'])
     csv_file = PATH + os.path.sep + 'In[' + str(len(globals()['In']) - 1) + '].csv'
+    csv_cols = "--csv-columns 'name,status,message,duration_formatted,function,parameters_as_columns'"
     res = os.system('pytest --csv ' + csv_file + ' ' + PATH + os.path.sep + 'test-tmp.py')
 '''
 
         return nbformat.v4.new_code_cell(source)
+
+    @staticmethod
+    def merge_notebooks(paths, path_output):
+        cells = []
+        for p in paths:
+            with open(p, 'r') as file:
+                cells.append(json.loads(file.read())['cells'])
+
+        with open(paths[0], 'r') as file:
+            new_dict = json.loads(file.read()).copy()
+            new_dict['cells'] = list(np.concatenate(cells))
+
+        with open(path_output, 'w') as json_file:
+            json.dump(new_dict, json_file)
+
+        return True

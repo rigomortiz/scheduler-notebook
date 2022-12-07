@@ -10,29 +10,27 @@ from src.Executor.Constants import *
 
 class Notebook:
 
-    def __init__(self, path: str, params: list, kernel_name: str):
+    def __init__(self, path: str, params: list, kernel_name: str, output_path: str):
         self.path = path
         self.params = params
         self.kernel_name = kernel_name
         self.path_test = ''
+        self.output_path = output_path
 
     def __str__(self):
         return 'path=' + self.path + ', params=' + str(self.params) + ', kernel_name=' + self.kernel_name + \
-            ', path_test=' + self.path_test
+            ', path_test=' + self.path_test + ', output_path=' + self.output_path
 
     def run(self) -> None:
         logging.info('Open file: %s', self.path)
         with open(self.path) as f:
             nb = nbformat.read(f, as_version=AS_VERSION)
-            value_accum = list(filter(lambda param: (param[TYPE] == ACCUMULATED), self.params))[0][VALUE].split(',')[-1]
-            output_path = OUTPUT_PATH + os.path.sep + value_accum
-            name = os.path.basename(self.path.replace(NOTEBOOK_EXTENSION, '_' + value_accum + NOTEBOOK_EXTENSION))
-            self.path_test = output_path + os.path.sep + name.replace(NOTEBOOK_EXTENSION, '.py')
-            notebook = output_path + os.path.sep + name
+            name = os.path.basename(self.path)
+            self.path_test = self.output_path + os.path.sep + name.replace(NOTEBOOK_EXTENSION, '.py')
+            notebook = self.output_path + os.path.sep + name
 
-            self.params.append({NAME: '@PATH@', VALUE: output_path, TYPE: CONSTANT})
+            self.params.append({NAME: '@PATH@', VALUE: self.output_path, TYPE: CONSTANT})
 
-            Utils.create_directories(value_accum)
             logging.info('Notebook: %s version: %s running with kernel %s', name, str(AS_VERSION), self.kernel_name)
             logging.info('Running cells...')
 
@@ -40,7 +38,7 @@ class Notebook:
             # nb.cells.insert(0, Utils.get_cell_read_env())
 
             # Add cell to init
-            nb.cells.insert(0, Utils.start_cell(value_accum, self.params))
+            nb.cells.insert(0, Utils.start_cell(self.params))
 
             # Add cell to save env variables
             nb.cells.insert(len(nb.cells) + 1, Utils.end_cell())
